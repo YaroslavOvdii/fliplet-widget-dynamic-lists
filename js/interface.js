@@ -660,6 +660,7 @@ var DynamicLists = (function() {
           return _this.loadData();
         })
         .then(function() {
+          _this.isLoaded = true;
           _this.initializeFilterSortable();
           _this.initializeSortSortable();
         });
@@ -669,11 +670,9 @@ var DynamicLists = (function() {
         return new Promise(function(resolve) {
           Fliplet.Studio.emit('widget-mode', 'wide');
           $('.state').removeClass('loading is-loading');
-          _this.isLoaded = true;
           resolve();
         });
       } else {
-        _this.isLoaded = true;
         if (_this.config['style-specific'].length) {
           _.forEach(_this.config['style-specific'], function(item) {
             $('.' + item).removeClass('hidden');
