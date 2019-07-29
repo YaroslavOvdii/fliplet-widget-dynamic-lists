@@ -84,6 +84,7 @@ var DynamicLists = (function() {
     }, configuration);
     _this.widgetId = configuration.id;
 
+    _this.isLoaded = false;
     $('.layouts-flex').html(layoutsTemplate(listLayouts));
 
     _this.attachListeners();
@@ -668,9 +669,11 @@ var DynamicLists = (function() {
         return new Promise(function(resolve) {
           Fliplet.Studio.emit('widget-mode', 'wide');
           $('.state').removeClass('loading is-loading');
+          _this.isLoaded = true;
           resolve();
         });
       } else {
+        _this.isLoaded = true;
         if (_this.config['style-specific'].length) {
           _.forEach(_this.config['style-specific'], function(item) {
             $('.' + item).removeClass('hidden');
