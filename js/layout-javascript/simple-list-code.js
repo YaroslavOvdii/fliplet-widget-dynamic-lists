@@ -1205,6 +1205,16 @@ DynamicList.prototype.renderLoopHTML = function (iterateeCb) {
         requestAnimationFrame(render);
       } else{
         _this.$container.find('.simple-list-container').removeClass('loading').addClass('ready');
+
+        _this.$container.find('[data-line-clamp]').each(function() {
+          var lineClamp = $(this).data('line-clamp');
+          var showLines =  Modernizr.ie11
+            ? lineClamp + 1 
+            : lineClamp;
+
+          $clamp(this, { clamp: showLines });
+        });
+
         Fliplet.Hooks.run('flListDataAfterRenderList', {
           records: data,
           config: _this.data
@@ -1942,11 +1952,14 @@ DynamicList.prototype.getEntryComments = function(options) {
         return instance.query({
           allowGrouping: true,
           where: {
-            content: content
+            content: content,
+            settings: {
+              text: { $regex: '[^\s]+' }
+            }
           }
         });
       })
-      .then(function(entries){
+      .then(function(entries) {
         record.comments = entries;
         record.commentCount = entries.length;
       });
