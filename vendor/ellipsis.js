@@ -6,10 +6,7 @@
  * @param {number} lines - number of lines that need to left
  */
 function ellipsizeTextBox(selector, lines) {
-   var lineHeight = 1.2; // Default line height in em
    var el = document.querySelectorAll(selector);
-   var elHeight = (lineHeight * lines) + lineHeight; // Add one more line height so that we clip text right
-   var inlineTags = ['b', 'big', 'i', 'small', 'tt', 'abbr', 'acronym', 'cite', 'code', 'dfn', 'em', 'kbd', 'strong', 'samp', 'var', 'a', 'bdo', 'br', 'img', 'map', 'object', 'q', 'script', 'span', 'sub', 'sup', 'button', 'input', 'label', 'select', 'textarea', 'h1', 'h2', 'h3', 'h4', 'h5'];
 
    if (el.length === 0) {
       console.error('There is no elements on the page with this "' + selector + '" selector. Please check the selector.');
@@ -17,15 +14,20 @@ function ellipsizeTextBox(selector, lines) {
    }
 
    for (var i = 0; i < el.length; i++) {
-      var isInline = _.indexOf(inlineTags, el[i].tagName.toLowerCase());
+      var computedStyle = window.getComputedStyle(el[i]); // Get computed styles
+      var lineHeightValue = computedStyle.getPropertyValue('line-height').match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g); // Default line height in em
+      var lineHeightMeasure = lineHeightValue[1]; // Find what is been used for measuring line-height
+      var lineHeight = parseFloat(lineHeightValue[0]); // Parse float value of the line height
+      var elHeight = (lineHeight * lines) + lineHeight; // Add one more line height so that we clip text right
+      var isInline = computedStyle.getPropertyValue('display');
 
-      if (isInline > -1) {
+      if (isInline === 'inline') {
          console.error('Please, do not use ellipsizeTextBox function on inline elements it may cause an infinite loop and block your app.',
             'You have used it on <' + el[i].tagName.toLowerCase() + '> tag which was found by this "' + selector + '" selector');
          break;
       }
 
-      el[i].style.height = elHeight + 'em'; // Set element height according to the number of lines we want to left
+      el[i].style.height = elHeight + lineHeightMeasure; // Set element height according to the number of lines we want to left
 
       var wordArray = el[i].innerHTML.split(' ');
 
