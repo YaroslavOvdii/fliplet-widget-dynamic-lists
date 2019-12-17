@@ -1505,6 +1505,7 @@ DynamicList.prototype.renderLoopHTML = function (iterateeCb) {
   });
 }
 
+// To insure that at the moment when we call superClamp element have a height so lib worked right
 DynamicList.prototype.setClampHeight = function(selector) {
   return new Promise(function (resolve, reject) {
     var elements = document.querySelectorAll(selector);
@@ -1515,7 +1516,8 @@ DynamicList.prototype.setClampHeight = function(selector) {
 
     for (var i = 0; i < elements.length; i++) {
       var element = elements[i];
-      var lineHeightValue = window.getComputedStyle(element).getPropertyValue('line-height').match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
+      var lineHeightValue = window.getComputedStyle(element)
+        .getPropertyValue('line-height').match(/[a-zA-Z]+|[0-9]+(?:\.[0-9]+|)/g);
       var lineHeightMeasure  = lineHeightValue[1];
       var elementHeight = parseFloat(lineHeightValue[0]);
       var clampLines = element.dataset.lineClamp;

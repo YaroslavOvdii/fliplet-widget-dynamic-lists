@@ -1231,6 +1231,7 @@ DynamicList.prototype.renderLoopHTML = function (iterateeCb) {
   });
 }
 
+// To insure that at the moment when we call superClamp element have a height so lib worked right
 DynamicList.prototype.setClampHeight = function(selector) {
   return new Promise(function (resolve, reject) {
     var elements = document.querySelectorAll(selector);
@@ -1254,6 +1255,7 @@ DynamicList.prototype.setClampHeight = function(selector) {
   });
 }
 
+// To avoid large distance between block we remove height at the element
 DynamicList.prototype.removeClampHeight = function(elements) {
   for (var i = 0; i < elements.length; i++) {
     var element = elements[i];
