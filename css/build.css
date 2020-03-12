@@ -195,3 +195,21 @@
   padding-top: 2px;
   padding-bottom: 2px;
 }
+
+.dots {
+  display: none;
+  position: absolute;
+  right: 0;
+  line-height: 1px;
+  bottom: 0.5em;
+}
+
+.clamp .dots {
+  display: block;
+}
+
+.clamp .dots::after {
+  content: '...';
+  background: rgb(255,255,255);
+  background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.7) 20%, rgba(255,255,255,1) 100%);
+}

@@ -23,6 +23,70 @@ Fliplet.Registry.set('dynamicListUtils', (function () {
       || Static.RegExp.dataSourcesPath.test(str);
   }
 
+  /**
+   * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+   * 
+   * @param {String} text The text to be rendered.
+   * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+   * 
+   * @returns {float} width of the text in pixels
+   * 
+   * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+   */
+  function getTextWidth(text, font) {
+    // re-use canvas object for better performance
+    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    var context = canvas.getContext("2d");
+    context.font = font;
+    var metrics = context.measureText(text);
+    return metrics.width;
+  }
+
+  /**
+   * This function decieds is there is needed clamp or not
+   * 
+   * @param {DOM} element - DOM element whitch is needed to be clamped
+   */
+  function isElementNeedClamp(element) {
+    var $element = $(element);
+    var elementStyle = window.getComputedStyle(element)
+    var linesToClamp = $element.data('line-clamp');
+    var elementHeight = parseInt(parseInt(elementStyle.lineHeight) * linesToClamp);
+    var contentHeight = parseInt(getTextWidth($element.text().trim(), elementStyle.font));
+    var textLines = parseInt(contentHeight/parseInt(elementStyle.width));
+
+    if (textLines > linesToClamp) {
+      $element.css('max-height', elementHeight).addClass('clamp')
+    }
+  }
+
+  /**
+   * Function that is lanching a element clamp
+   * 
+   * @param {JQ object} - a JQ object of the element container
+   * @param {string} - a container selector to find e.g. (.simple-list-container)
+   * @param {string} selector  - a CSS selector of the elements that we need to clamp. 
+   */
+  function clampLines ($container, containerSelector, selector) {
+    // We should start this function only for IE11 users
+    if (!Modernizr.ie11) {
+      return;
+    }
+
+    selector = selector || '[data-line-clamp]';
+    var $elements = $(selector);
+
+
+
+    $container.find(containerSelector).removeClass('ready').addClass('loading');
+
+    $elements.each(function() {
+      isElementNeedClamp(this);
+    });
+
+    $container.find(containerSelector).removeClass('loading').addClass('ready');
+  }
+
   function smartParseFloat(value) {
     // Convert strings to numbers where possible so that
     // strings that reprepsent numbers are compared as numbers
@@ -1281,7 +1345,8 @@ Fliplet.Registry.set('dynamicListUtils', (function () {
     },
     Page: {
       updateSearchContext: updateSearchContext,
-      updateFilterControlsContext: updateFilterControlsContext
+      updateFilterControlsContext: updateFilterControlsContext,
+      clampLines: clampLines
     },
     String: {
       splitByCommas: splitByCommas,

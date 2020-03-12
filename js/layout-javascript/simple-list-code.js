@@ -1210,6 +1210,9 @@ DynamicList.prototype.renderLoopHTML = function (iterateeCb) {
           iterateeCb(renderLoopIndex * _this.INCREMENTAL_RENDERING_BATCH_SIZE, renderLoopIndex * _this.INCREMENTAL_RENDERING_BATCH_SIZE + _this.INCREMENTAL_RENDERING_BATCH_SIZE);
         }
         renderLoopIndex++;
+
+        _this.Utils.Page.clampLines(_this.$container, '.simple-list-container')
+
         // if the browser is ready, render
         requestAnimationFrame(render);
       } else{
