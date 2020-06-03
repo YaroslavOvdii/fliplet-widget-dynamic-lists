@@ -28,6 +28,10 @@ function DynamicList(id, data, container) {
   this.isSearching;
   this.showBookmarks;
   this.fetchedAllBookmarks = false;
+  this.entriesOffset = 0;
+  this.isLoadingNewData = false;
+  this.hasMoreData = true;
+  this.isSearchDropOffset = false;
 
   this.emailField = 'Email';
   this.myProfileData = [];
@@ -119,6 +123,12 @@ DynamicList.prototype.attachObservers = function() {
   Fliplet.Hooks.on('beforePageView', function (options) {
     if (options.addToHistory === false) {
       _this.closeDetails();
+    }
+  });
+
+  $(window).scroll(function() {
+    if (($(window).scrollTop() + $(window).height() > $(document).height() - 100) && !_this.isLoadingNewData && _this.hasMoreData) {
+        _this.renderNextPage();
     }
   });
 
@@ -948,6 +958,16 @@ DynamicList.prototype.connectToDataSource = function() {
           query = _this.data.dataQuery;
         }
 
+        if (_this.isSearching && !_this.isSearchDropOffset) {
+          _this.entriesOffset = 0;
+          _this.isSearchDropOffset = true;
+        }
+
+        debugger;
+        _.extend(query, { limit: 10, offset: _this.entriesOffset });
+
+        _this.isSearching;
+
         return connection.find(query);
       });
   }
@@ -1037,6 +1057,51 @@ DynamicList.prototype.addSummaryData = function(records, forProfile) {
   });
 
   return loopData;
+}
+
+DynamicList.prototype.renderNextPage = function() {
+  // function that will render additional list items
+  this.isLoadingNewData = true;
+  this.entriesOffset += 10;
+
+  var template = this.data.advancedSettings && this.data.advancedSettings.loopHTML
+  ? Handlebars.compile(this.data.advancedSettings.loopHTML)
+  : Handlebars.compile(Fliplet.Widget.Templates[this.layoutMapping[this.data.layout]['loop']]());
+  var _this = this;
+
+  this.connectToDataSource()
+    .then(function(records) {
+      if (!records.length) {
+        _this.hasMoreData = false;
+        _this.isLoadingNewData = false;
+        return;
+      }
+
+      var renderData = _this.addSummaryData(records);
+      
+      // For correct detail view opening
+      _this.modifiedListItems = _.concat(_this.modifiedListItems, renderData)
+      _this.listItems = _.concat(_this.listItems, records)
+
+      if (_this.isSearching) {
+        return _this.Utils.Records.runSearch({
+          value: _this.searchValue,
+          records: records,
+          fields: _this.data.searchFields,
+          config: _this.data,
+          activeFilters: _this.activeFilters,
+          showBookmarks: _this.showBookmarks,
+          limit: -1
+        });
+      }
+
+      return renderData;         
+    })
+    .then(function (entries) {
+      debugger
+      $('#small-card-list-wrapper-' + _this.data.id).append(template(entries));
+      _this.isLoadingNewData = false; 
+    })
 }
 
 DynamicList.prototype.renderLoopHTML = function () {
