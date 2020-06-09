@@ -1278,7 +1278,7 @@ DynamicList.prototype.renderDatesHTML = function(records, index) {
 
   if (!dateField
     || _this.dataSourceColumns.indexOf(dateField) === -1) {
-    throw new Error('Your user is not allowed to perform this operation');
+    throw new Error('You are not allowed to read this data.');
   }
 
   var clonedRecords = _.clone(records);
