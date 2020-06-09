@@ -1278,7 +1278,7 @@ DynamicList.prototype.renderDatesHTML = function(records, index) {
 
   if (!dateField
     || _this.dataSourceColumns.indexOf(dateField) === -1) {
-    throw new Error('Date field is misconfigured. Please check your component settings.');
+    throw new Error('Your user is not allowed to perform this operation');
   }
 
   var clonedRecords = _.clone(records);
