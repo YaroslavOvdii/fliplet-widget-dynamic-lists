@@ -190,7 +190,11 @@ DynamicList.prototype.attachObservers = function() {
       _this.hideFilterOverlay();
       _this.clearFilters();
     })
-    .on('click', '.hidden-filter-controls-filter', function() {
+    .on('click keydown', '.hidden-filter-controls-filter', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       var $filter = $(this);
 
       Fliplet.Analytics.trackEvent({
@@ -230,7 +234,7 @@ DynamicList.prototype.attachObservers = function() {
 
       _this.$container.find('.hidden-filter-controls').addClass('active');
       _this.$container.find('.list-search-cancel').addClass('active');
-      _this.$container.find('[data-filter-group]').prop('hidden', null);
+      _this.$container.find('[data-filter-group]').show();
       $el.addClass('active');
 
       _this.toggleListView();
@@ -274,12 +278,16 @@ DynamicList.prototype.attachObservers = function() {
 
       _this.$container.find('.clear-filters').removeClass('hidden');
     })
-    .on('click', '.list-search-cancel', function() {
+    .on('click keydown', '.list-search-cancel', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       // Hide filters
       $(this).removeClass('active');
       _this.$container.find('.hidden-filter-controls').removeClass('active');
       _this.$container.find('.list-search-icon .fa-sliders').removeClass('active');
-      _this.$container.find('[data-filter-group]').prop('hidden', null);
+      _this.$container.find('[data-filter-group]').hide();
       _this.calculateFiltersHeight(true);
 
       // Clear filters
@@ -349,12 +357,20 @@ DynamicList.prototype.attachObservers = function() {
       _this.isSearching = true;
       _this.searchData(value);
     })
-    .on('click', '.clear-search', function() {
+    .on('click keydown', '.clear-search', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       _this.$container.find('.new-agenda-list-container').removeClass('searching');
       _this.isSearching = false;
       _this.searchData('');
     })
-    .on('click', '.go-to-poll', function() {
+    .on('click keydown', '.go-to-poll', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       if (!_this.data.pollEnabled || !_this.data.pollColumn) {
         return;
       }
@@ -369,7 +385,11 @@ DynamicList.prototype.attachObservers = function() {
         entry: entry
       });
     })
-    .on('click', '.go-to-survey', function() {
+    .on('click keydown', '.go-to-survey', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       if (!_this.data.surveyEnabled || !_this.data.surveyColumn) {
         return;
       }
@@ -384,7 +404,11 @@ DynamicList.prototype.attachObservers = function() {
         entry: entry
       });
     })
-    .on('click', '.go-to-questions', function() {
+    .on('click keydown', '.go-to-questions', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       if (!_this.data.questionsEnabled || !_this.data.questionsColumn) {
         return;
       }
@@ -425,10 +449,14 @@ DynamicList.prototype.attachObservers = function() {
           : 'bookmarks_hide'
       });
     })
-    .on('click', '.toggle-agenda, .toggle-bookmarks', function(e) {
-      e.stopPropagation();
+    .on('click keydown', '.toggle-agenda, .toggle-bookmarks', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
 
-      var $toggle = _this.$container.find(e.handleObj.selector);
+      event.stopPropagation();
+
+      var $toggle = _this.$container.find(event.handleObj.selector);
 
       $toggle.toggleClass('mixitup-control-active');
       _this.$container.find('.new-agenda-list-container').toggleClass('show-bookmarks');
@@ -456,7 +484,11 @@ DynamicList.prototype.attachObservers = function() {
         allowClick = true;
       }, 100);
     })
-    .on('click', '.agenda-list-item', function(event) {
+    .on('click keydown', '.agenda-list-item', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 32 && event.keyCode !== 13) {
+        return;
+      }
+
       if (_this.isPanning && !_this.allowClick && $(this).hasClass('open')) {
         return;
       }
@@ -573,7 +605,11 @@ DynamicList.prototype.attachObservers = function() {
         return;
       }
     })
-    .on('click', '.agenda-date-selector li', function() {
+    .on('click keydown', '.agenda-date-selector li', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       // prevents clicking the active one
       // prevents clicking the placeholder
       if ($(this).hasClass('active') || $(this).hasClass('placeholder')) {
@@ -602,7 +638,11 @@ DynamicList.prototype.attachObservers = function() {
         return;
       }
     })
-    .on('click', '.dynamic-list-add-item', function() {
+    .on('click keydown', '.dynamic-list-add-item', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+      
       if (!_this.data.addEntryLinkAction) {
         return;
       }
@@ -634,7 +674,11 @@ DynamicList.prototype.attachObservers = function() {
         });
       }
     })
-    .on('click', '.dynamic-list-edit-item', function() {
+    .on('click keydown', '.dynamic-list-edit-item', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       if (!_this.data.editEntryLinkAction) {
         return;
       }
@@ -668,7 +712,11 @@ DynamicList.prototype.attachObservers = function() {
         });
       }
     })
-    .on('click', '.dynamic-list-delete-item', function() {
+    .on('click keydown', '.dynamic-list-delete-item', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       var _that = $(this);
       var entryID = $(this).parents('.agenda-item-inner-content').data('entry-id');
       var options = {
@@ -730,7 +778,11 @@ DynamicList.prototype.attachObservers = function() {
         Fliplet.UI.Actions(options);
       });
     })
-    .on('click', '.agenda-detail-overlay .bookmark-wrapper, .search-results-wrapper .bookmark-wrapper', function() {
+    .on('click keydown', '.agenda-detail-overlay .bookmark-wrapper, .search-results-wrapper .bookmark-wrapper', function(event) {
+      if (event.type === 'keydown' && event.keyCode !== 13 && event.keyCode !== 32) {
+        return;
+      }
+
       var id = $(this).parents('.agenda-detail-wrapper, .agenda-list-item').data('entry-id');
       var record = _.find(_this.listItems, { id: id });
 
@@ -1775,8 +1827,8 @@ DynamicList.prototype.setupBookmarkButton = function(options) {
           name: Fliplet.Env.get('pageTitle') + '/' + title,
           likeLabel: '<span class="fa fa-bookmark-o"></span>',
           likedLabel: '<span class="fa fa-bookmark"></span>',
-          likeWrapper: '<div class="bookmark-wrapper btn-bookmark"></div>',
-          likedWrapper: '<div class="bookmark-wrapper btn-bookmarked"></div>',
+          likeWrapper: '<div class="bookmark-wrapper btn-bookmark focus-outline" tabindex="0"></div>',
+          likedWrapper: '<div class="bookmark-wrapper btn-bookmarked focus-outline" tabindex="0"></div>',
           addType: 'prepend',
           getAllCounts: false,
           liked: record.bookmarked,
