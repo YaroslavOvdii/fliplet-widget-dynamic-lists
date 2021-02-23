@@ -2201,10 +2201,20 @@ DynamicList.prototype.addDetailViewData = function(entry) {
     if (obj.type === 'image') {
       content = entry.originalData[obj.column];
 
+      var contentArray;
+
       if (typeof content === 'string') {
-        content = content.split(/\n/);
+        var detectURLRegex = /((?:ftp|http|https):\/\/(?:\w+:{0,1}\w*@)?(?:\S+)(?::[0-9]+)?(?:\/|\/(?:[\w#!:.?+=&%@!-/]))?)/;
+
+        contentArray = content.split(detectURLRegex);
       }
 
+      if (Array.isArray(content)) {
+        contentArray = content;
+        content = content[0];
+      }
+
+      // this part is needed for the photoswipe so stays as it is
       if (!_this.imagesData[obj.id]) {
         _this.imagesData[obj.id] = {
           images: [],
@@ -2214,21 +2224,10 @@ DynamicList.prototype.addDetailViewData = function(entry) {
         };
       }
 
-      _this.imagesData[obj.id].images = content.map(function(imgUrl) {
+      contentArray.sort(_this.Utils.Records.sortImagesByName);
+
+      _this.imagesData[obj.id].images = _.map(contentArray, function(imgUrl) {
         return { url: imgUrl };
-      }).sort(function(a, b) {
-        var aImgName = a.url.match(/\/contents\/(.*?)\./)[1].toUpperCase();
-        var bImgName = b.url.match(/\/contents\/(.*?)\./)[1].toUpperCase();
-
-        if (aImgName < bImgName) {
-          return -1;
-        }
-
-        if (aImgName > bImgName) {
-          return 1;
-        }
-
-        return 0;
       });
     }
 
@@ -2240,6 +2239,10 @@ DynamicList.prototype.addDetailViewData = function(entry) {
       labelEnabled: labelEnabled,
       type: obj.type
     };
+
+    if (contentArray) {
+      newEntryDetail.contentArray = contentArray;
+    }
 
     entry.entryDetails.push(newEntryDetail);
   });
