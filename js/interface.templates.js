@@ -49,7 +49,7 @@ this["Fliplet"]["Widget"]["Templates"]["templates.interface.detail-view-panels"]
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.editable : depth0),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">\r\n        <option value=\"image\">Image</option>\r\n        <option value=\"text\" selected>Plain text</option>\r\n        <option value=\"html\">HTML</option>\r\n        <option value=\"url\">URL</option>\r\n        <option value=\"tel\">Telephone</option>\r\n        <option value=\"mail\">Email</option>\r\n        <option value=\"date\">Date (e.g. "
     + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
-    + ")</option>\n        <option value=\"file\">File</option>\n      </select>\n    </div>\n    <div class=\"rTableCell select type\">\n      <select name=\"select_field_label\" id=\"detail_select_label_"
+    + ")</option>\r\n        <option value=\"file\">File</option>\r\n      </select>\r\n    </div>\r\n    <div class=\"rTableCell select type\">\r\n      <select name=\"select_field_label\" id=\"detail_select_label_"
     + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
     + "\" class=\"form-control\" "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.editable : depth0),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
